@@ -1,9 +1,11 @@
 import os
 
 from flask import Flask, request, render_template, jsonify, send_file, send_from_directory, safe_join, abort, url_for
+from flask_cors import CORS
 from werkzeug.utils import secure_filename, redirect
 
 app = Flask(__name__,template_folder='template')
+CORS(app)
 app.config['UPLOAD_FOLDER'] = './files'
 
 @app.route('/')
@@ -17,17 +19,17 @@ def uploader():
         fileName = secure_filename(f.filename)
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], fileName))
 
-        # return url_for('getImg', filename=fileName)
+        return jsonify("{'status' : 'True'}")
 
 
-@app.route('/api/list')
+@app.route('/api/list', methods=['GET'])
 def files():
     index = 0
     lista = []
     files = tuple(os.listdir(app.config['UPLOAD_FOLDER']))
     for file in files:
         index += 1
-        json = {f'{index}': file}
+        json = {f'name': file}
         lista.append(json)
     return jsonify(lista)
 
@@ -37,5 +39,5 @@ def getImg(filename):
 
 
 if __name__ == '__main__':
-    app.run('10.1.2.6')
+    app.run('192.168.2.50')
 
