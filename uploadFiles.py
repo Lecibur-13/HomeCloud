@@ -33,8 +33,9 @@ def files():
     files = tuple(os.listdir(app.config['UPLOAD_FOLDER']))
     for file in files:
         index += 1
-        json = {f'name': file}
-        lista.append(json)
+        type = file.split('.')
+        jsonFile = {f'name': file, 'type': type[len(type) - 1]}
+        lista.append(jsonFile)
     return jsonify(lista)
 
 @app.route("/api/get/<path:filename>")
