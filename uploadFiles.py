@@ -33,9 +33,25 @@ def files():
     files = tuple(os.listdir(app.config['UPLOAD_FOLDER']))
     for file in files:
         index += 1
-        type = file.split('.')
-        jsonFile = {f'name': file, 'type': type[len(type) - 1]}
+        split = file.split('.')
+        type = split[len(split) - 1]
+        jsonFile = {f'name': file, 'type': type}
         lista.append(jsonFile)
+    return jsonify(lista)
+
+@app.route('/api/listImg', methods=['GET'])
+def files():
+    index = 0
+    lista = []
+    files = tuple(os.listdir(app.config['UPLOAD_FOLDER']))
+    for file in files:
+        index += 1
+        split = file.split('.')
+        type = split[len(split) - 1]
+        jsonFile = {f'name': file, 'type': type}
+
+        if type == 'jpg' or type == 'jpeg' or type == 'png' or type == 'gif':
+            lista.append(jsonFile)
     return jsonify(lista)
 
 @app.route("/api/get/<path:filename>")
