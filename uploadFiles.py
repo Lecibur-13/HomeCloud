@@ -14,12 +14,16 @@ def upload_file():
 
 @app.route('/api/uploader', methods=['POST'])
 def uploader():
+
+    lista = []
     if request.method == 'POST':
         f = request.files['archivo']
         fileName = secure_filename(f.filename)
+        json = {'status' : 'True'}
+        lista.append(json)
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], fileName))
 
-        return jsonify("{'status' : 'True'}")
+        return jsonify(lista)
 
 
 @app.route('/api/list', methods=['GET'])
@@ -39,5 +43,5 @@ def getImg(filename):
 
 
 if __name__ == '__main__':
-    app.run('192.168.2.50')
+    app.run('192.168.1.245')
 
