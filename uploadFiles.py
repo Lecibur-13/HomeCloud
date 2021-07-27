@@ -75,5 +75,5 @@ def getImg(filename):
 
 
 if __name__ == '__main__':
-    app.run('192.168.2.50')
+    app.run('10.1.2.6')
 
