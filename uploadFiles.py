@@ -17,16 +17,16 @@ def uploader():
 
     lista = []
     if request.method == 'POST':
-        f = request.files['archivo']
-        fileName = secure_filename(f.filename)
-        json = {'status' : 'True'}
-        lista.append(json)
-        f.save(os.path.join(app.config['UPLOAD_FOLDER'], fileName))
+        f = request.files.getlist('archivo')
+        for files in f:
+            fileName = secure_filename(files.filename)
+            json = {'status': 'True'}
+            lista.append(json)
+            files.save(os.path.join(app.config['UPLOAD_FOLDER'], fileName))
+    return jsonify(lista)
 
-        return jsonify(lista)
 
-
-@app.route('/api/list', methods=['GET'])
+@app.route('/api/listfile', methods=['GET'])
 def files():
     index = 0
     lista = []
@@ -36,11 +36,26 @@ def files():
         split = file.split('.')
         type = split[len(split) - 1]
         jsonFile = {f'name': file, 'type': type}
-        lista.append(jsonFile)
+        if type != 'jpg' and type != 'jpeg' and type != 'png' and type != 'gif' and type != 'pdf':
+            lista.append(jsonFile)
     return jsonify(lista)
 
-@app.route('/api/listImg', methods=['GET'])
-def files():
+@app.route('/api/listpdf', methods=['GET'])
+def pdf():
+    index = 0
+    lista = []
+    files = tuple(os.listdir(app.config['UPLOAD_FOLDER']))
+    for file in files:
+        index += 1
+        split = file.split('.')
+        type = split[len(split) - 1]
+        jsonFile = {f'name': file, 'type': type}
+        if type == 'pdf':
+            lista.append(jsonFile)
+    return jsonify(lista)
+
+@app.route('/api/listimg', methods=['GET'])
+def img():
     index = 0
     lista = []
     files = tuple(os.listdir(app.config['UPLOAD_FOLDER']))
@@ -60,5 +75,5 @@ def getImg(filename):
 
 
 if __name__ == '__main__':
-    app.run('192.168.1.245')
+    app.run('192.168.2.50')
 
