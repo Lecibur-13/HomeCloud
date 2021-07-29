@@ -36,7 +36,7 @@ def files():
         split = file.split('.')
         type = split[len(split) - 1]
         jsonFile = {f'name': file, 'type': type}
-        if type != 'jpg' and type != 'jpeg' and type != 'png' and type != 'gif' and type != 'pdf':
+        if type != 'jpg' and type != 'jpeg' and type != 'png' and type != 'gif' and type != 'pdf' and type != 'mp4':
             lista.append(jsonFile)
     return jsonify(lista)
 
@@ -65,7 +65,7 @@ def img():
         type = split[len(split) - 1]
         jsonFile = {f'name': file, 'type': type}
 
-        if type == 'jpg' or type == 'jpeg' or type == 'png' or type == 'gif':
+        if type == 'jpg' or type == 'jpeg' or type == 'png' or type == 'gif' or type == 'mp4':
             lista.append(jsonFile)
     return jsonify(lista)
 
@@ -73,7 +73,15 @@ def img():
 def getImg(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+@app.route("/api/delete/<path:filename>", methods=['DELETE'])
+def deletImg(filename):
+    os.remove(app.config['UPLOAD_FOLDER'] + '/' + filename)
+    json = {'status': 'True'}
+    return jsonify(json)
 
 if __name__ == '__main__':
-    app.run('10.1.2.6')
+    from waitress import serve
+    serve(app, host='192.168.1.74', port=8080)
+
+    # app.run()
 
